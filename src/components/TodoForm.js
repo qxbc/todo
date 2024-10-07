@@ -6,6 +6,7 @@ import '../App.css'; // убедитесь, что путь правильный
 export const TodoForm = ({ addTodo }) => {
   const [value, setValue] = useState('');
   const [dark, setDark] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Load theme from localStorage on component mount
   useEffect(() => {
@@ -38,6 +39,16 @@ export const TodoForm = ({ addTodo }) => {
     localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
   };
 
+  const handleInput = (event) => {
+    event.target.setCustomValidity('');
+    setErrorMessage('');
+  }
+
+  const handleInvalid = (event) => {
+    event.target.setCustomValidity('Введите задачу!');
+    setErrorMessage('Введите задачу!');
+  }
+
   return (
     <section className=''>
       <form className='flex flex-row space-x-5 items-center' onSubmit={handleSubmit}>
@@ -47,6 +58,9 @@ export const TodoForm = ({ addTodo }) => {
           value={value}
           placeholder='Какая задача сегодня?'
           onChange={(e) => setValue(e.target.value)}
+          required
+          onInput={handleInput}
+          onInvalid={handleInvalid}
         />
         <button type='submit' className='dark:text-white'>Добавить задачу</button>
         <button type='button' className='' onClick={darkModeHandler}>
